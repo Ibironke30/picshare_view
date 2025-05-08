@@ -8,6 +8,13 @@ export const GalleryContext = createContext({
 	getPhotos: async () => {},
 	likePhoto: async () => {},
 	showPhoto: () => {},
+	ratePhoto: () => {},
+	addComment: () => {},
+	deleteComment: () => {},
+	getComments: () => {},
+	handleCommentInput: () => {},
+	comments: [],
+	comment: "",
 	photoIndex: -1,
 	isUploadForm: {},
 	isShowing: false,
@@ -22,6 +29,8 @@ export const GalleryContext = createContext({
 export const GalleryContextProvider = ({ children }) => {
 	const [photo, setPhoto] = useState(null);
 	const [photos, setPhotos] = useState([]);
+	const [comments, setComments] = useState([]);
+	const [comment, setCommentInput] = useState("");
 	const [isShowing, setIsShowing] = useState(false);
 	const [photoIndex, setPhotoIndex] = useState(-1);
 	const [isUploading, setIsUploading] = useState(false);
@@ -34,6 +43,32 @@ export const GalleryContextProvider = ({ children }) => {
 		location: "",
 	});
 
+	const getComments = async (id) => {
+		try {
+			const { data } = await axiosInstance.get(`/store/${id}/comments`);
+
+			const comments = data.data;
+			setComments(comments);
+		} catch (error) {}
+	};
+
+	const handleCommentInput = (e) => setCommentInput(e.target.value);
+
+	const addComment = async (id) => {
+		console.log(comment.trim().length);
+		if (comment.trim().length < 10) return;
+		try {
+			const { data } = await axiosInstance.post(`/store/${id}/comment`, {
+				comment,
+			});
+			const commented = data.data;
+			setComments([...comments, commented]);
+			setCommentInput("");
+		} catch (error) {}
+	};
+
+	const deleteComment = async () => {};
+
 	const getPhoto = (id) => {};
 
 	const getPhotos = async () => {
@@ -45,6 +80,8 @@ export const GalleryContextProvider = ({ children }) => {
 			setError(error.message);
 		}
 	};
+
+	const ratePhoto = async () => {};
 
 	const likePhoto = async (id) => {
 		try {
@@ -131,6 +168,13 @@ export const GalleryContextProvider = ({ children }) => {
 				getPhotos,
 				likePhoto,
 				showPhoto,
+				ratePhoto,
+				addComment,
+				deleteComment,
+				getComments,
+				handleCommentInput,
+				comments,
+				comment,
 				isShowing,
 				isUploadForm,
 				photoIndex,
