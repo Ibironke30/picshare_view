@@ -16,6 +16,11 @@ export default function PhotoDetail({ open, onClose }) {
 		gtx.getComments(gtx.photos[current]?._id);
 	}, [current]);
 
+	const handleRate = (i) => {
+		console.log(i);
+		gtx.ratePhoto(gtx.photos[current]?._id, i);
+	};
+
 	return (
 		<>
 			<div className={styles.photoDetail}>
@@ -53,9 +58,7 @@ export default function PhotoDetail({ open, onClose }) {
 								<span
 									key={i}
 									className={styles.ratings}
-									onClick={() => handleClick(i)}
-									// onMouseOver={() => handleMouseOver(i)}
-									// onMouseLeave={handleMouseLeave}
+									onClick={() => handleRate(i)}
 									aria-label={`Rate ${i + 1} star${i === 0 ? "" : "s"}`}
 								>
 									★

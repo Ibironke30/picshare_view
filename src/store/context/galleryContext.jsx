@@ -56,7 +56,7 @@ export const GalleryContextProvider = ({ children }) => {
 
 	const addComment = async (id) => {
 		console.log(comment.trim().length);
-		if (comment.trim().length < 10) return;
+		if (comment.trim().length < 1) return;
 		try {
 			const { data } = await axiosInstance.post(`/store/${id}/comment`, {
 				comment,
@@ -81,7 +81,19 @@ export const GalleryContextProvider = ({ children }) => {
 		}
 	};
 
-	const ratePhoto = async () => {};
+	const ratePhoto = async (id, rate) => {
+		try {
+			const { data } = await axiosInstance.post(`/store/${id}/rate`, {
+				rating: rate + 1,
+			});
+			const rated = data.data;
+			setPhotos((prevPhotos) =>
+				prevPhotos.map((p) =>
+					p._id === id ? { ...p, rating: rated.rating } : p
+				)
+			);
+		} catch (error) {}
+	};
 
 	const likePhoto = async (id) => {
 		try {
